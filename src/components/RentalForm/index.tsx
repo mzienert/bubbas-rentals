@@ -16,6 +16,10 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import SaveIcon from '@material-ui/icons/Save';
+import Button from '@material-ui/core/Button';
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: theme.spacing(2),
             textAlign: 'left',
             color: theme.palette.text.secondary,
+        },
+        button: {
+            margin: theme.spacing(1),
         },
     }),
 );
@@ -41,6 +48,7 @@ interface Genders {
 }
 export const RentalForm = () => {
     const classes = useStyles();
+    const { register, handleSubmit, errors } = useForm<any>();
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
@@ -49,11 +57,19 @@ export const RentalForm = () => {
     const [value, setValue] = React.useState<Date | null>(null);
 
     const handleChange = (event: any) => {
-        setState({...state, [event.target.id]: event.target.value})
+        setState({...state, [event.target.id]: event.target.value.trim()})
     }
 
-    const handleSubmit = () => {
-        console.log('shit')
+    const onSubmit = async (thing: any) => {
+        console.log('hi there: ', state)
+
+    }
+
+    if (Object.keys(errors).length > 0) {
+        const firstError =  Object.values(errors)[0];
+        if (firstError) {
+            console.log(firstError.message);
+        }
     }
 
     const abilityLevels: AbilityLevels[] = [
@@ -72,7 +88,7 @@ export const RentalForm = () => {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Typography variant="h5">
@@ -89,7 +105,22 @@ export const RentalForm = () => {
                                     name="firstName"
                                     onChange={handleChange}
                                     id="firstName"
-                                    fullWidth />
+                                    fullWidth
+                                    inputRef={
+                                        register({
+                                            required: 'A first name is required',
+                                            maxLength: {
+                                                value: 50,
+                                                message: 'First name is too long'
+                                            },
+                                            minLength: {
+                                                value: 2,
+                                                message: 'First name is too short'
+                                            }
+                                        })
+                                    }
+                                    error={ errors.firstName ? true : false }
+                                   />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={4}>
@@ -101,7 +132,21 @@ export const RentalForm = () => {
                                     name="lastName"
                                     onChange={handleChange}
                                     id="lastName"
-                                    fullWidth />
+                                    fullWidth
+                                    inputRef={
+                                        register({
+                                            required: 'A last name is required',
+                                            maxLength: {
+                                                value: 50,
+                                                message: 'Last name is too long'
+                                            },
+                                            minLength: {
+                                                value: 2,
+                                                message: 'Last name is too short'
+                                            }
+                                        })
+                                    }
+                                    error={ errors.lastName ? true : false }/>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={2}>
@@ -206,6 +251,29 @@ export const RentalForm = () => {
                                     <FormControlLabel value="goofy" control={<Radio color="primary" />} label="Goofy" />
                                 </RadioGroup>
                             </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Divider />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={false}
+                                        onChange={handleChange}
+                                        name="checkedB"
+                                        color="primary"
+                                    />
+                                }
+                                label="I have read the Liability Waiver"
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.button}
+                                endIcon={<SaveIcon />}
+                                type="submit"
+                            >
+                                Send
+                            </Button>
                         </Grid>
                     </Grid>
                 </form>
