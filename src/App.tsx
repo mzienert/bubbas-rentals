@@ -1,9 +1,13 @@
 import React from 'react';
 import './App.css';
-import {Container} from "./components/Container";
+import { Container } from "./components/Container";
+import { LocalizationProvider } from '@material-ui/pickers';
+import MomentUtils from '@material-ui/pickers/adapter/moment';
 
 export const App = () => {
   return (
-    <Container />
+    <LocalizationProvider dateAdapter={MomentUtils}>
+      <Container />
+    </LocalizationProvider>
   );
 }
