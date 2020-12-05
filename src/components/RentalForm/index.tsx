@@ -19,7 +19,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { abilityLevels, genders } from "../../constants/RentalForm";
+import { FormData } from "../../types/RentalForm";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,58 +39,22 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface AbilityLevels {
-    value: string,
-    display: string,
-}
 
-interface Genders {
-    value: string,
-    display: string
-}
+
 export const RentalForm = () => {
     const classes = useStyles();
-    const { register, handleSubmit, errors } = useForm<any>();
-    const [state, setState] = useState({
-        firstName: '',
-        lastName: '',
-    })
+    const { register, handleSubmit, errors, control } = useForm<FormData>();
 
     const [value, setValue] = React.useState<Date | null>(null);
 
-    const handleChange = (event: any) => {
-        setState({...state, [event.target.id]: event.target.value.trim()})
-    }
-
-    const onSubmit = async (thing: any) => {
-        console.log('hi there: ', state)
-
-    }
-
-    if (Object.keys(errors).length > 0) {
-        const firstError =  Object.values(errors)[0];
-        if (firstError) {
-            console.log(firstError.message);
-        }
-    }
-
-    const abilityLevels: AbilityLevels[] = [
-        {value: 'beginner', display: 'Beginner'},
-        {value: 'intermediate', display: 'Intermediate'},
-        {value: 'advanced', display: 'Advanced'},
-        {value: 'expert', display: 'Expert'},
-    ]
-
-    const genders: Genders[] = [
-        {value: 'female', display: 'Female'},
-        {value: 'male', display: 'Male'},
-        {value: '?', display: '???'},
-    ]
+    const onSubmit = (data: FormData) => {
+        console.log('deez: ', data);
+    };
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit((data: FormData) => onSubmit(data))}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Typography variant="h5">
@@ -97,14 +63,10 @@ export const RentalForm = () => {
                             <Divider />
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <FormControl
-                                variant="filled"
-                                fullWidth>
+                            <FormControl variant="filled" fullWidth>
                                 <InputLabel htmlFor="firstName">First Name</InputLabel>
                                 <FilledInput
                                     name="firstName"
-                                    onChange={handleChange}
-                                    id="firstName"
                                     fullWidth
                                     inputRef={
                                         register({
@@ -119,19 +81,15 @@ export const RentalForm = () => {
                                             }
                                         })
                                     }
-                                    error={ errors.firstName ? true : false }
-                                   />
+                                    error={ errors.firstName ? true : false } />
+                                    {errors?.firstName && errors.firstName.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <FormControl
-                                variant="filled"
-                                fullWidth>
+                            <FormControl variant="filled" fullWidth>
                                 <InputLabel htmlFor="lastName">Last Name</InputLabel>
                                 <FilledInput
                                     name="lastName"
-                                    onChange={handleChange}
-                                    id="lastName"
                                     fullWidth
                                     inputRef={
                                         register({
@@ -146,35 +104,44 @@ export const RentalForm = () => {
                                             }
                                         })
                                     }
-                                    error={ errors.lastName ? true : false }/>
+                                    error={ errors.lastName ? true : false } />
+                                    {errors?.lastName && errors.lastName.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={2}>
-                            <MobileDatePicker
+                          {/* <MobileDatePicker
                                 clearable
                                 label="Birthdate"
                                 toolbarPlaceholder="Enter Date"
                                 value={value}
                                 onChange={(newValue) => setValue(newValue)}
-                                renderInput={(props) => <TextField {...props} variant="filled" fullWidth />}
-                            />
+                                renderInput={(props) => <TextField
+                                    {...props}
+                                    variant="filled"
+                                    fullWidth
+                                    />} />*/}
                         </Grid>
                         <Grid item xs={12} md={2}>
                             <FormControl
                                 variant="filled"
                                 fullWidth>
-                                <InputLabel id="gender-label">Gender</InputLabel>
-                                <Select
-                                    labelId="gender-label"
-                                    id="gender"
-                                    value=""
-                                    onChange={handleChange}
-                                    fullWidth
-                                >
-                                    {genders.map(gender => (
-                                        <MenuItem value={gender.value}>{gender.display}</MenuItem>
-                                    ))}
-                                </Select>
+                                <InputLabel htmlFor="gender">gender</InputLabel>
+                                <Controller
+                                    control={control}
+                                    defaultValue=""
+                                    name="gender"
+                                    rules={{ required: 'Gender is required'}}
+                                    as={
+                                        <Select id="gender-select" error={errors?.gender && !!errors.gender.message}>
+                                            {genders.map(gender => (
+                                                <MenuItem value={gender.value}>
+                                                    {gender.display}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    }
+                                />
+                                {errors?.gender && errors.gender.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
@@ -184,21 +151,25 @@ export const RentalForm = () => {
                             <Divider />
                         </Grid>
                         <Grid item xs={12} md={2}>
-                            <FormControl
-                                variant="filled"
+                            <FormControl variant="filled"
                                 fullWidth>
                                 <InputLabel id="ability-label">Ability</InputLabel>
-                                <Select
-                                    labelId="ability-label"
-                                    id="ability"
-                                    value=""
-                                    onChange={handleChange}
-                                    fullWidth
-                                >
-                                    {abilityLevels.map(abilityLevel => (
-                                        <MenuItem value={abilityLevel.value}>{abilityLevel.display}</MenuItem>
-                                    ))}
-                                </Select>
+                                <Controller
+                                    control={control}
+                                    defaultValue=""
+                                    name="ability"
+                                    rules={{ required: 'Ability is required'}}
+                                    as={
+                                        <Select id="ability-select" error={errors?.ability && !!errors.ability.message}>
+                                            {genders.map(ability => (
+                                                <MenuItem value={ability.value}>
+                                                    {ability.display}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    }
+                                />
+                                {errors?.ability && errors.ability.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={2}>
@@ -258,7 +229,6 @@ export const RentalForm = () => {
                                 control={
                                     <Checkbox
                                         checked={false}
-                                        onChange={handleChange}
                                         name="checkedB"
                                         color="primary"
                                     />
