@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import FilledInput from '@material-ui/core/FilledInput'
 import Grid from '@material-ui/core/Grid';
-import { MobileDatePicker, DatePicker, TimePicker, DateTimePicker, LocalizationProvider } from '@material-ui/pickers'
+import DatePicker from '@material-ui/lab/DatePicker';
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider';
@@ -16,12 +16,14 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import { useForm, Controller } from "react-hook-form";
-import { abilityLevels, genders } from "../../constants/RentalForm";
+import { abilityLevels, genders, heights, bootSizes, weights } from "../../constants/RentalForm";
 import { FormData } from "../../types/RentalForm";
+import {useDispatch} from "react-redux";
+import {addRider} from "../../redux/actions";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,13 +45,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const RentalForm = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const { register, handleSubmit, errors, control } = useForm<FormData>();
 
     const [value, setValue] = React.useState<Date | null>(null);
 
     const onSubmit = (data: FormData) => {
-        console.log('deez: ', data);
+        dispatch(addRider(data))
     };
+
+    const valuetext = (value: number) => `${value}lbs`;
 
     return (
         <div className={classes.root}>
@@ -82,7 +87,6 @@ export const RentalForm = () => {
                                         })
                                     }
                                     error={ errors.firstName ? true : false } />
-                                    {errors?.firstName && errors.firstName.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={4}>
@@ -105,21 +109,30 @@ export const RentalForm = () => {
                                         })
                                     }
                                     error={ errors.lastName ? true : false } />
-                                    {errors?.lastName && errors.lastName.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={2}>
-                          {/* <MobileDatePicker
-                                clearable
-                                label="Birthdate"
-                                toolbarPlaceholder="Enter Date"
+                            <DatePicker
+                                disableFuture
+                                openTo="year"
+                                mask="dd/MM/yyyy"
+                                label="Date of birth"
+                                views={["year", "month", "date"]}
                                 value={value}
-                                onChange={(newValue) => setValue(newValue)}
-                                renderInput={(props) => <TextField
-                                    {...props}
-                                    variant="filled"
-                                    fullWidth
-                                    />} />*/}
+                                onChange={(newValue: any) => setValue(newValue)}
+                                renderInput={(params) =>
+                                    <TextField {...params}
+                                        variant="filled"
+                                        fullWidth
+                                        name="birthdate"
+                                        inputRef={
+                                            register({
+                                                required: 'A birthdate is required',
+                                            })
+                                        }
+                                        error={ errors.birthdate ? true : false }
+                                    />
+                                }/>
                         </Grid>
                         <Grid item xs={12} md={2}>
                             <FormControl
@@ -141,7 +154,6 @@ export const RentalForm = () => {
                                         </Select>
                                     }
                                 />
-                                {errors?.gender && errors.gender.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
@@ -161,7 +173,7 @@ export const RentalForm = () => {
                                     rules={{ required: 'Ability is required'}}
                                     as={
                                         <Select id="ability-select" error={errors?.ability && !!errors.ability.message}>
-                                            {genders.map(ability => (
+                                            {abilityLevels.map(ability => (
                                                 <MenuItem value={ability.value}>
                                                     {ability.display}
                                                 </MenuItem>
@@ -169,55 +181,69 @@ export const RentalForm = () => {
                                         </Select>
                                     }
                                 />
-                                {errors?.ability && errors.ability.message}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={2}>
-                            <Typography id="boot-slider" gutterBottom>
-                                Boot Size
-                            </Typography>
-                            <Slider
-                                defaultValue={9}
-                                aria-labelledby="boot-slider"
-                                valueLabelDisplay="auto"
-                                step={0.5}
-                                marks
-                                min={5}
-                                max={13}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={3}>
-                            <Typography id="height-slider" gutterBottom>
-                                 Height
-                            </Typography>
-                            <Slider
-                                defaultValue={30}
-                                aria-labelledby="height-slider"
-                                valueLabelDisplay="auto"
-                                step={10}
-                                marks
-                                min={10}
-                                max={110}
-                            />
+                            <FormControl variant="filled"
+                                         fullWidth>
+                                <InputLabel id="height">Height</InputLabel>
+                                <Controller
+                                    control={control}
+                                    defaultValue=""
+                                    name="height"
+                                    rules={{ required: 'Height is required'}}
+                                    as={
+                                        <Select id="height-select" error={errors?.height && !!errors.height.message}>
+                                            {heights.map(height => (
+                                                <MenuItem value={height.value}>
+                                                    {height.display}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    }
+                                />
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12} md={2}>
-                            <Typography id="weight-slider" gutterBottom>
+                            <FormControl variant="filled"
+                                         fullWidth>
+                                <InputLabel id="boot-label">Boot Size</InputLabel>
+                                <Controller
+                                    control={control}
+                                    defaultValue=""
+                                    name="bootSize"
+                                    rules={{ required: 'Boot size is required'}}
+                                    as={
+                                        <Select id="boot-select" error={errors?.bootSize && !!errors.bootSize.message}>
+                                            {bootSizes.map(bootSize => (
+                                                <MenuItem value={bootSize.value}>
+                                                    {bootSize.display}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    }
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                            <Typography id="weight" gutterBottom>
                                 Weight
                             </Typography>
                             <Slider
-                                defaultValue={30}
-                                aria-labelledby="weight-slider"
-                                valueLabelDisplay="auto"
-                                step={10}
+                                defaultValue={150}
+                                getAriaValueText={valuetext}
+                                aria-labelledby="weight"
+                                step={5}
                                 marks
-                                min={10}
-                                max={110}
-                            />
+                                min={50}
+                                max={275}
+                                valueLabelDisplay="on"
+                                />
                         </Grid>
                         <Grid item xs={12} md={3}>
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Stance</FormLabel>
-                                <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                                <RadioGroup row aria-label="stance" name="stance" defaultValue="regular">
                                     <FormControlLabel value="regular" control={<Radio color="primary" />} label="Regular" />
                                     <FormControlLabel value="goofy" control={<Radio color="primary" />} label="Goofy" />
                                 </RadioGroup>
@@ -226,18 +252,14 @@ export const RentalForm = () => {
                         <Grid item xs={12}>
                             <Divider />
                             <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={false}
-                                        name="checkedB"
-                                        color="primary"
-                                    />
-                                }
-                                label="I have read the Liability Waiver"
+                                control={<Checkbox />}
+                                label="I have read and agree to the rental waiver."
+                                name="waiver"
+                                inputRef={register}
                             />
+
                             <Button
                                 variant="contained"
-                                color="primary"
                                 className={classes.button}
                                 endIcon={<SaveIcon />}
                                 type="submit"

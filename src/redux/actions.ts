@@ -3,6 +3,7 @@ import {
     USER_HAS_AUTHENTICATED,
     SNACKBAR_SUCCESS,
     LOADING_BAR,
+    ADD_RIDER,
 } from "./actionTypes";
 
 export const userHasAuthenticated = (isAuthenticated: boolean) => ({
@@ -28,3 +29,9 @@ export const setLoading = () => ({
     type: LOADING_BAR
 });
 
+export const addRider = (rider: any) => ({
+    type: ADD_RIDER,
+    payload: {
+        rider
+    }
+})
