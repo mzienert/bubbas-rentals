@@ -1,4 +1,4 @@
-import { AbilityLevels, Genders, Heights, BootSizes, Weights } from "../types/RentalForm";
+import { AbilityLevels, Genders, Heights, BootSizes } from "../types/RentalForm"
 
 export const abilityLevels: AbilityLevels[] = [
     {value: 'beginner', display: 'Beginner'},
@@ -73,37 +73,3 @@ export const heights: Heights[] = [
     {value: `6'11"`, display: `6'11"`},
 ]
 
-export const weights: Weights[] = [
-    {value: 50, label: '50lbs'},
-    {value: 55, label: '55lbs'},
-    {value: 60, label: '60lbs'},
-    {value: 65, label: '65lbs'},
-    {value: 70, label: '70lbs'},
-    {value: 75, label: '75lbs'},
-    {value: 80, label: '80lbs'},
-    {value: 85, label: '85lbs'},
-    {value: 90, label: '90lbs'},
-    {value: 95, label: '95lbs'},
-    {value: 100, label: '100lbs'},
-    {value: 105, label: '105lbs'},
-    {value: 110, label: '110lbs'},
-    {value: 115, label: '115lbs'},
-    {value: 120, label: '120lbs'},
-    {value: 125, label: '125lbs'},
-    {value: 130, label: '130lbs'},
-    {value: 135, label: '135lbs'},
-    {value: 140, label: '140lbs'},
-    {value: 145, label: '145lbs'},
-    {value: 150, label: '150lbs'},
-    {value: 155, label: '155lbs'},
-    {value: 160, label: '160lbs'},
-    {value: 165, label: '165lbs'},
-    {value: 170, label: '170lbs'},
-    {value: 175, label: '175lbs'},
-    {value: 180, label: '180lbs'},
-    {value: 185, label: '185lbs'},
-    {value: 190, label: '190lbs'},
-    {value: 195, label: '195lbs'},
-    {value: 200, label: '200lbs'},
-    {value: 205, label: '205lbs'},
-];

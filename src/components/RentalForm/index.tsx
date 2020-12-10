@@ -4,26 +4,26 @@ import Paper from '@material-ui/core/Paper'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import FilledInput from '@material-ui/core/FilledInput'
-import Grid from '@material-ui/core/Grid';
-import DatePicker from '@material-ui/lab/DatePicker';
+import Grid from '@material-ui/core/Grid'
+import DatePicker from '@material-ui/lab/DatePicker'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Slider from '@material-ui/core/Slider';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import SaveIcon from '@material-ui/icons/Save';
-import Button from '@material-ui/core/Button';
-import { useForm, Controller } from "react-hook-form";
-import { abilityLevels, genders, heights, bootSizes, weights } from "../../constants/RentalForm";
-import { FormData } from "../../types/RentalForm";
-import {useDispatch} from "react-redux";
-import {addRider} from "../../redux/actions";
+import Divider from '@material-ui/core/Divider'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import Slider from '@material-ui/core/Slider'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormLabel from '@material-ui/core/FormLabel'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import SaveIcon from '@material-ui/icons/Save'
+import Button from '@material-ui/core/Button'
+import { useForm, Controller } from "react-hook-form"
+import { abilityLevels, genders, heights, bootSizes} from "../../constants/RentalForm"
+import { RentalFormData } from "../../types/RentalForm"
+import {useDispatch} from "react-redux"
+import {addRider} from "../../redux/actions"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,16 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-
-
 export const RentalForm = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { register, handleSubmit, errors, control } = useForm<FormData>();
+    const { register, handleSubmit, errors, control } = useForm<RentalFormData>();
 
     const [value, setValue] = React.useState<Date | null>(null);
 
-    const onSubmit = (data: FormData) => {
+    const onSubmit = (data: RentalFormData) => {
         dispatch(addRider(data))
     };
 
@@ -59,7 +57,7 @@ export const RentalForm = () => {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <form onSubmit={handleSubmit((data: FormData) => onSubmit(data))}>
+                <form onSubmit={handleSubmit((data: RentalFormData) => onSubmit(data))}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Typography variant="h5">

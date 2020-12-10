@@ -1,6 +1,10 @@
 import { USER_HAS_AUTHENTICATED } from "../actionTypes";
 
-const initialState = {
+export interface AuthIState {
+    isAuthenticated: boolean,
+}
+
+const initialState: AuthIState = {
     isAuthenticated: false,
 };
 

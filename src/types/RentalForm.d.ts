@@ -18,12 +18,7 @@ export interface BootSizes {
     display: string
 }
 
-export interface Weights {
-    value: number,
-    label: string
-}
-
-export type FormData = {
+export type RentalFormData = {
     firstName: string
     lastName: string
     gender: string
@@ -33,4 +28,4 @@ export type FormData = {
     height: string
     bootSize: string
     birthdate: any
-};
+}

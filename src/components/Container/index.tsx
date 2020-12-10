@@ -1,17 +1,16 @@
-import React from 'react';
-import { makeStyles, useTheme, Theme} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Hidden from '@material-ui/core/Hidden';
-import CloseIcon from '@material-ui/icons/Close';
-import { RentalForm } from "../RentalForm";
+import React from 'react'
+import { makeStyles, useTheme, Theme} from '@material-ui/core/styles'
+import Drawer from '@material-ui/core/Drawer'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import Hidden from '@material-ui/core/Hidden'
+import CloseIcon from '@material-ui/icons/Close'
+import { RentalForm } from "../RentalForm"
+import { Cart } from "../Cart"
 
-const drawerWidth = 340;
+const drawerWidth = 340
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -47,18 +46,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Container = () => {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const classes = useStyles()
+    const theme = useTheme()
+    const [mobileOpen, setMobileOpen] = React.useState(false)
 
     const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
+        setMobileOpen(!mobileOpen)
     };
 
     const drawer = (
-        <div>
-            <p>You haven't added any shit to your cart</p>
-        </div>
+        <Cart />
     );
 
     return (
@@ -120,4 +117,4 @@ export const Container = () => {
             </div>
         </div>
     )
-};
+}
